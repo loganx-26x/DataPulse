@@ -25,7 +25,6 @@ Catalyst Count is a web application built using Django 3.x/4.x, SQLite, and Boot
     - Create a `.env` file in the root directory of the project.
     - Add the following environment variables:
         ```
-        DEBUG=1
         SECRET_KEY=your_secret_key
         ```
 
@@ -39,11 +38,8 @@ Catalyst Count is a web application built using Django 3.x/4.x, SQLite, and Boot
     python manage.py createsuperuser
     ```
 
-7. **Download and unzip the test data set**
-    - Download the dataset from [here](https://www.dropbox.com/s/at6f63rdznw4bqs/free-7-million-company-dataset.zip?dl=0)
-    - Unzip the file in a suitable directory.
 
-8. **Run the development server**
+7. **Run the development server**
     ```bash
     python manage.py runserver
     ```
