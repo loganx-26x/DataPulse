@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Catalyst Query Builder</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+  </head>
+  <style>
+    body {
+      background: linear-gradient(135deg, #f0f4f8, #e1e8ed);
+      color: #333;
+    }
+
+    .container {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-tabs .nav-link.active {
+      color: #007bff;
+      background-color: #f8f9fa;
+      border-color: #007bff #007bff #fff;
+    }
+
+    .card {
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      color: #007bff;
+    }
+
+    .form-control,
+    .form-select {
+      border-radius: 8px;
+    }
+
+    #alertContainer {
+      margin-bottom: 20px;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border-color: #007bff;
+    }
+
+    .btn-primary:hover {
+      background-color: #0056b3;
+      border-color: #004080;
+    }
+
+    .btn-secondary {
+      background-color: #6c757d;
+      border-color: #6c757d;
+    }
+
+    .btn-secondary:hover {
+      background-color: #5a6268;
+      border-color: #545b62;
+    }
+  </style>
+  <body>
+    <div class="container mt-5">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link" href="/">Upload Data</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/query">Query Builder</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/users">Users</a>
+        </li>
+      </ul>
+
+      <div id="alertContainer"></div>
+      <div class="card p-4">
+        <h5 class="card-title">Query Builder</h5>
+        <form method="GET">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label for="keyword" class="form-label">Keyword</label>
+              <input
+                type="text"
+                class="form-control"
+                id="keyword"
+                placeholder="Keyword"
+                name="keyword"
+              />
+            </div>
+            <div class="col-md-4">
+              <label for="industry" class="form-label">Industry</label>
+              <select id="industry" name="industry" class="form-select">
+                <option value="">Choose...</option>
+                {% for industry in industries %}
+                <option value="{{ industry|lower }}">{{ industry }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label for="yearFounded" class="form-label">Year Founded</label>
+              <input
+                type="text"
+                class="form-control"
+                id="yearFounded"
+                placeholder="Year Founded"
+                name="year"
+              />
+            </div>
+            <div class="col-md-4">
+              <label for="city" class="form-label">City</label>
+              <select id="city" name="city" class="form-select">
+                <option value="">Choose...</option>
+                {% for city in cities %}
+                <option value="{{ city|lower }}">{{ city }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label for="state" class="form-label">State</label>
+              <select id="state" name="state" class="form-select">
+                <option value="">Choose...</option>
+                {% for state in states %}
+                <option value="{{ state|lower }}">{{ state }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label for="country" class="form-label">Country</label>
+              <select name="country" id="country" class="form-select">
+                <option value="">Choose...</option>
+                {% for country in countries %}
+                <option value="{{ country|lower }}">{{ country }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label for="employeesMin" class="form-label"
+                >Minimum Employees</label
+              >
+              <input type="number" name="employeeMin" />
+            </div>
+            <div class="col-md-4">
+              <label for="employeesMax" class="form-label"
+                >Maximum Employees</label
+              >
+              <input type="number" name="employeeMax" />
+            </div>
+          </div>
+          <div class="mt-4">
+            <button type="submit" id="submit" class="btn btn-primary">
+              Get Data
+            </button>
+            <button type="reset" class="btn btn-secondary">Reset</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.3/js/bootstrap.min.js"></script>
+    <script>
+      // Handling form submission
+      document
+        .getElementById("submit")
+        .addEventListener("click", function (event) {
+          event.preventDefault(); // Prevent default submission
+
+          // Fetch form data
+          const keyword = document.getElementById("keyword").value;
+          const industry = document.getElementById("industry").value;
+          const yearFounded = document.getElementById("yearFounded").value;
+          const city = document.getElementById("city").value;
+          const state = document.getElementById("state").value;
+          const country = document.getElementById("country").value;
+          const employeeMin =
+            document.getElementsByName("employeeMin")[0].value;
+          const employeeMax =
+            document.getElementsByName("employeeMax")[0].value;
+
+          // Construct query string
+          const queryParams = new URLSearchParams({
+            keyword: keyword,
+            industry: industry,
+            year: yearFounded,
+            city: city,
+            state: state,
+            country: country,
+            employeeMin: employeeMin,
+            employeeMax: employeeMax,
+          }).toString();
+          // Convert form data to URL query params
+          // Make GET request to /api/get-result with form data
+          fetch(`/api/get-result?${queryParams}`)
+            .then((response) => response.json())
+            .then((data) => {
+              // Display alert with the number of records found
+              const alertHTML = `
+                    <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+                        ${data.data} records found for the given query
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                `;
+              document.getElementById("alertContainer").innerHTML = alertHTML;
+            })
+            .catch((error) => {
+              console.error("Error fetching data:", error);
+              // Handle errors if needed
+            });
+        });
+    </script>
+  </body>
+</html>

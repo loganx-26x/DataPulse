@@ -1,0 +1,7 @@
+.venv
+catalyst_count/__pycache__
+count/__pycache__
+catalyst_count/.env
+count/migrations/__pycache__
+db.sqlite3
+.env
