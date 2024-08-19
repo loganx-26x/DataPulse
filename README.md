@@ -43,3 +43,17 @@ Catalyst Count is a web application built using Django 3.x/4.x, SQLite, and Boot
     ```bash
     python manage.py runserver
     ```
+
+### Potential Improvements:
+
+Frontend Enhancement: Currently, the application uses custom HTML/CSS. To improve the frontend experience, I can consider integrating Angular for a more dynamic and responsive interface.
+
+Error Handling: I can enhance the application’s robustness by implementing a more comprehensive error handling throughout.
+
+Email Confirmation: Add an email confirmation feature for new user registrations to improve security and user verification.
+
+CSS Framework Upgrade: Transition from custom CSS to Tailwind CSS (even if using Angular) for a more streamlined and maintainable styling approach.
+
+CI/CD Integration: For future development with multiple contributors, incorporate GitHub Actions for automated testing, building, and deployment processes.
+
+
